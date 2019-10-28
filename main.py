@@ -1,10 +1,11 @@
 import sys
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from Cell import Cell
 import Ui
 
-FIELD_SIZE = (480, 480)
-
+FIELD_SIZE = (360, 360)
+BLACK_CELL_COLOR = QtGui.QColor(118, 150, 85)
+WHITE_CELL_COLOR = QtGui.QColor(241, 236, 214)
 
 class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
     def __init__(self):
@@ -15,11 +16,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
 
     def initUi(self):
         self.setGeometry(710, 390, 600, 600)
-        self.setWindowTitle("McDonald's")
-
-        print(self.chessCellsGridLayout.horizontalSpacing())
-        print(self.chessCellsGridLayout.verticalSpacing())
-        print(self.chessCellsGridLayout.spacing())
 
         for row in range(8):
             for col in range(8):
@@ -27,9 +23,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
                             FIELD_SIZE[0] // 8, FIELD_SIZE[1] // 8)
 
                 if (row + col) % 2 == 1:
-                    cell.setColor(QtCore.Qt.green)
+                    cell.setColor(BLACK_CELL_COLOR)
                 else:
-                    cell.setColor(QtCore.Qt.white)
+                    cell.setColor(WHITE_CELL_COLOR)
+
+                cell.setFigure("./p.png")
 
                 self.chessCellsGridLayout.addWidget(cell, row, col)
 
