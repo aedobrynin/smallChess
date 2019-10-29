@@ -4,12 +4,8 @@ from Cell import Cell
 import Ui
 
 import chess
+from config import *
 
-
-FIELD_SIZE = (360, 360)
-BLACK_CELL_COLOR = QtGui.QColor(118, 150, 85)
-WHITE_CELL_COLOR = QtGui.QColor(241, 236, 214)
-PIECES_DIR = "./Pieces/"
 
 class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
     def __init__(self):
@@ -18,27 +14,60 @@ class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
         self.setupUi(self)
         self.initUi()
 
-    def initUi(self):
-        self.setGeometry(710, 390, 600, 600)
+        self.firstCell = None
+        self.secondCell = None
 
+    def initUi(self):
         self.board = chess.Board()
 
         for row in range(8):
             for col in range(8):
-                cell = Cell(self, row, col,
+                cell = Cell(self, col, row,
                             FIELD_SIZE[0] // 8, FIELD_SIZE[1] // 8)
+                cell.clicked.connect(self.cellClicked)
 
                 if (row + col) % 2 == 1:
                     cell.setColor(BLACK_CELL_COLOR)
                 else:
                     cell.setColor(WHITE_CELL_COLOR)
 
-                square = chess.square(col, 7 - row)
+                square = chess.square(col, row)
                 piece = self.board.piece_at(square)
                 if piece is not None:
-                    cell.setPiece(PIECES_DIR + piece.symbol() + ".png")
+                    cell.setPiece(piece.symbol())
 
-                self.chessCellsGridLayout.addWidget(cell, row, col)
+                self.chessCellsGridLayout.addWidget(cell, 7 - row, col)
+
+    def cellClicked(self):
+        cell = self.sender()
+
+        if self.firstCell is None:
+            if cell.getPiece() is not None:
+                self.firstCell = cell
+        else:
+            self.secondCell = cell
+
+        if self.secondCell is not None:
+            firstSquare = chess.square(*self.firstCell.getCoordinates())
+            secondSquare = chess.square(*self.secondCell.getCoordinates())
+
+            move = chess.Move(firstSquare, secondSquare)
+
+            if move in self.board.legal_moves:
+                self.board.push(move)
+
+                firstCellPiece = self.board.piece_at(firstSquare)
+                if firstCellPiece is not None:
+                    self.firstCell.setPiece(firstCellPiece.symbol())
+                else:
+                    self.firstCell.removePiece()
+
+                secondCellPiece = self.board.piece_at(secondSquare)
+                if secondCellPiece is not None:
+                    self.secondCell.setPiece(secondCellPiece.symbol())
+
+            self.firstCell = None
+            self.secondCell = None
 
 
 if __name__ == "__main__":

@@ -1,8 +1,11 @@
+from config import *
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 
 
 class Cell(QtWidgets.QLabel):
+    clicked = pyqtSignal()
+
     def __init__(self, parent, row, col, width, height, color=Qt.black):
         super().__init__(parent)
 
@@ -23,14 +26,15 @@ class Cell(QtWidgets.QLabel):
         self.piece = None
 
     def mousePressEvent(self, event):
-        self.removePiece()
+        self.clicked.emit()
 
     def updatePixmap(self):
         self.pixmap.fill(self.color)
 
         if self.piece is not None:
             painter = QtGui.QPainter(self.pixmap)
-            painter.drawPixmap(0, 0, QtGui.QPixmap(self.piece))
+            painter.drawPixmap(0, 0,
+                               QtGui.QPixmap(P_DIR + self.piece + P_EXT))
             painter.end()
 
         self.setPixmap(self.pixmap)
@@ -49,3 +53,6 @@ class Cell(QtWidgets.QLabel):
 
     def getCoordinates(self):
         return self.row, self.col
+
+    def getPiece(self):
+        return self.piece
