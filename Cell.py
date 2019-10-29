@@ -20,17 +20,17 @@ class Cell(QtWidgets.QLabel):
     def initUi(self):
         self.setFixedSize(self.width, self.height)
         self.pixmap = QtGui.QPixmap(self.width, self.height)
-        self.figure = None
+        self.piece = None
 
     def mousePressEvent(self, event):
-        self.removeFigure()
+        self.removePiece()
 
     def updatePixmap(self):
         self.pixmap.fill(self.color)
 
-        if self.figure is not None:
+        if self.piece is not None:
             painter = QtGui.QPainter(self.pixmap)
-            painter.drawPixmap(0, 0, QtGui.QPixmap(self.figure))
+            painter.drawPixmap(0, 0, QtGui.QPixmap(self.piece))
             painter.end()
 
         self.setPixmap(self.pixmap)
@@ -39,12 +39,12 @@ class Cell(QtWidgets.QLabel):
         self.color = color
         self.updatePixmap()
 
-    def setFigure(self, figure):
-        self.figure = figure
+    def setPiece(self, piece):
+        self.piece = piece
         self.updatePixmap()
 
-    def removeFigure(self):
-        self.figure = None
+    def removePiece(self):
+        self.piece = None
         self.updatePixmap()
 
     def getCoordinates(self):
