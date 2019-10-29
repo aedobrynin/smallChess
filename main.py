@@ -1,13 +1,13 @@
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 from Cell import Cell
-import Ui
+import MainWindowUi
 
 import chess
 from config import *
 
 
-class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
+class MainWindow(QtWidgets.QMainWindow, MainWindowUi.Ui_MainWindow):
     def __init__(self):
         super().__init__()
 
@@ -18,7 +18,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
         self.secondCell = None
 
     def initUi(self):
-        self.board = chess.Board()
+        self.actionNewGame.triggered.connect(self.newGame)
+        self.actionSeeStatistics.triggered.connect(self.openStatisticsWindow)
+        self.actionSeePlayersList.triggered.connect(self.openPlayersListWindow)
 
         for row in range(8):
             for col in range(8):
@@ -30,11 +32,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
                     cell.setColor(BLACK_CELL_COLOR)
                 else:
                     cell.setColor(WHITE_CELL_COLOR)
-
-                square = chess.square(col, row)
-                piece = self.board.piece_at(square)
-                if piece is not None:
-                    cell.setPiece(piece.symbol())
 
                 self.chessCellsGridLayout.addWidget(cell, 7 - row, col)
 
@@ -57,18 +54,40 @@ class MainWindow(QtWidgets.QMainWindow, Ui.Ui_MainWindow):
                 self.board.push(move)
 
                 firstCellPiece = self.board.piece_at(firstSquare)
-                if firstCellPiece is not None:
-                    self.firstCell.setPiece(firstCellPiece.symbol())
-                else:
-                    self.firstCell.removePiece()
+                self.firstCell.setPiece(firstCellPiece)
 
                 secondCellPiece = self.board.piece_at(secondSquare)
-                if secondCellPiece is not None:
-                    self.secondCell.setPiece(secondCellPiece.symbol())
+                self.secondCell.setPiece(secondCellPiece)
 
             self.firstCell = None
             self.secondCell = None
 
+    def initBoard(self):
+        self.board = chess.Board()
+
+        for row in range(8):
+            for col in range(8):
+                cell = self.chessCellsGridLayout.\
+                        itemAtPosition(7 - row, col).widget()
+
+                square = chess.square(col, row)
+                piece = self.board.piece_at(square)
+
+                if piece is not None:
+                    cell.setPiece(piece)
+
+        self.firstCell = None
+        self.secondCell = None
+
+    def newGame(self):
+        print("New game")
+        self.initBoard()
+
+    def openStatisticsWindow(self):
+        pass
+
+    def openPlayersListWindow(self):
+        pass
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

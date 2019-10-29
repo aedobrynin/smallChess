@@ -34,7 +34,7 @@ class Cell(QtWidgets.QLabel):
         if self.piece is not None:
             painter = QtGui.QPainter(self.pixmap)
             painter.drawPixmap(0, 0,
-                               QtGui.QPixmap(P_DIR + self.piece + P_EXT))
+                               QtGui.QPixmap(P_DIR + self.piece.symbol() + P_EXT))
             painter.end()
 
         self.setPixmap(self.pixmap)

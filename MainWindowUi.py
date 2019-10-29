@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Ui.ui'
+# Form implementation generated from reading ui file 'MainWindowUi.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.1
 #
@@ -13,18 +13,18 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(600, 600)
+        MainWindow.resize(380, 400)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QtCore.QSize(600, 600))
-        MainWindow.setMaximumSize(QtCore.QSize(600, 600))
+        MainWindow.setMinimumSize(QtCore.QSize(380, 400))
+        MainWindow.setMaximumSize(QtCore.QSize(380, 400))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 532, 482))
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 361, 351))
         self.gridLayoutWidget.setMinimumSize(QtCore.QSize(50, 50))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.chessCellsGridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
@@ -33,22 +33,25 @@ class Ui_MainWindow(object):
         self.chessCellsGridLayout.setSpacing(0)
         self.chessCellsGridLayout.setObjectName("chessCellsGridLayout")
         MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 600, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 380, 22))
         self.menubar.setObjectName("menubar")
-        self.menuNew_game = QtWidgets.QMenu(self.menubar)
-        self.menuNew_game.setObjectName("menuNew_game")
+        self.newGameButton = QtWidgets.QMenu(self.menubar)
+        self.newGameButton.setObjectName("newGameButton")
         MainWindow.setMenuBar(self.menubar)
-        self.actionPlayer_VS_Player = QtWidgets.QAction(MainWindow)
-        self.actionPlayer_VS_Player.setObjectName("actionPlayer_VS_Player")
-        self.actionPlayer_VS_AI = QtWidgets.QAction(MainWindow)
-        self.actionPlayer_VS_AI.setObjectName("actionPlayer_VS_AI")
-        self.menuNew_game.addAction(self.actionPlayer_VS_Player)
-        self.menuNew_game.addAction(self.actionPlayer_VS_AI)
-        self.menubar.addAction(self.menuNew_game.menuAction())
+        self.actionNewGame = QtWidgets.QAction(MainWindow)
+        self.actionNewGame.setObjectName("actionNewGame")
+        self.actionPVSAI = QtWidgets.QAction(MainWindow)
+        self.actionPVSAI.setObjectName("actionPVSAI")
+        self.actionSeeStatistics = QtWidgets.QAction(MainWindow)
+        self.actionSeeStatistics.setObjectName("actionSeeStatistics")
+        self.actionSeePlayersList = QtWidgets.QAction(MainWindow)
+        self.actionSeePlayersList.setObjectName("actionSeePlayersList")
+        self.newGameButton.addAction(self.actionNewGame)
+        self.newGameButton.addSeparator()
+        self.newGameButton.addAction(self.actionSeePlayersList)
+        self.newGameButton.addAction(self.actionSeeStatistics)
+        self.menubar.addAction(self.newGameButton.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -56,6 +59,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Small Chess"))
-        self.menuNew_game.setTitle(_translate("MainWindow", "New game"))
-        self.actionPlayer_VS_Player.setText(_translate("MainWindow", "Player VS Player"))
-        self.actionPlayer_VS_AI.setText(_translate("MainWindow", "Player VS AI"))
+        self.newGameButton.setTitle(_translate("MainWindow", "Actions"))
+        self.actionNewGame.setText(_translate("MainWindow", "New game"))
+        self.actionPVSAI.setText(_translate("MainWindow", "Player VS AI"))
+        self.actionSeeStatistics.setText(_translate("MainWindow", "See statistics"))
+        self.actionSeePlayersList.setText(_translate("MainWindow", "See players list"))

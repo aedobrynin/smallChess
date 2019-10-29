@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>600</height>
+    <width>380</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,14 +18,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
-    <height>600</height>
+    <width>380</width>
+    <height>400</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>600</width>
-    <height>600</height>
+    <width>380</width>
+    <height>400</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -37,8 +37,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>532</width>
-      <height>482</height>
+      <width>361</width>
+      <height>351</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -47,7 +47,7 @@
       <height>50</height>
      </size>
     </property>
-    <layout class="QGridLayout" name="chessCellsGridLayout">
+    <layout class="QGridLayout" name="chessCellsGridLayout" rowminimumheight="0">
      <property name="sizeConstraint">
       <enum>QLayout::SetFixedSize</enum>
      </property>
@@ -57,33 +57,44 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>380</width>
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuNew_game">
+   <widget class="QMenu" name="newGameButton">
     <property name="title">
-     <string>New game</string>
+     <string>Actions</string>
     </property>
-    <addaction name="actionPlayer_VS_Player"/>
-    <addaction name="actionPlayer_VS_AI"/>
+    <addaction name="actionNewGame"/>
+    <addaction name="separator"/>
+    <addaction name="actionSeePlayersList"/>
+    <addaction name="actionSeeStatistics"/>
    </widget>
-   <addaction name="menuNew_game"/>
+   <addaction name="newGameButton"/>
   </widget>
-  <action name="actionPlayer_VS_Player">
+  <action name="actionNewGame">
    <property name="text">
-    <string>Player VS Player</string>
+    <string>New game</string>
    </property>
   </action>
-  <action name="actionPlayer_VS_AI">
+  <action name="actionPVSAI">
    <property name="text">
     <string>Player VS AI</string>
+   </property>
+  </action>
+  <action name="actionSeeStatistics">
+   <property name="text">
+    <string>See statistics</string>
+   </property>
+  </action>
+  <action name="actionSeePlayersList">
+   <property name="text">
+    <string>See players list</string>
    </property>
   </action>
  </widget>
