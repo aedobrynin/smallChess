@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -30,6 +30,10 @@
   </property>
   <property name="windowTitle">
    <string>Small Chess</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="gridLayoutWidget">
@@ -66,16 +70,15 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="newGameButton">
+   <widget class="QMenu" name="actions">
     <property name="title">
      <string>Actions</string>
     </property>
     <addaction name="actionNewGame"/>
     <addaction name="separator"/>
-    <addaction name="actionSeePlayersList"/>
     <addaction name="actionSeeStatistics"/>
    </widget>
-   <addaction name="newGameButton"/>
+   <addaction name="actions"/>
   </widget>
   <action name="actionNewGame">
    <property name="text">
