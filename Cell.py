@@ -1,12 +1,11 @@
 from config import *
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 
 class Cell(QtWidgets.QLabel):
-    clicked = pyqtSignal()
+    clicked = QtCore.pyqtSignal()
 
-    def __init__(self, parent, row, col, width, height, color=Qt.black):
+    def __init__(self, parent, row, col, width, height, color=QtCore.Qt.black):
         super().__init__(parent)
 
         self.row = row
@@ -16,6 +15,7 @@ class Cell(QtWidgets.QLabel):
         self.height = height
 
         self.color = color
+        self.picked = False
 
         self.initUi()
         self.updatePixmap()
@@ -29,7 +29,10 @@ class Cell(QtWidgets.QLabel):
         self.clicked.emit()
 
     def updatePixmap(self):
-        self.pixmap.fill(self.color)
+        if self.picked:
+            self.pixmap.fill(PICKED_CELL_COLOR)
+        else:
+            self.pixmap.fill(self.color)
 
         if self.piece is not None:
             painter = QtGui.QPainter(self.pixmap)
@@ -49,6 +52,14 @@ class Cell(QtWidgets.QLabel):
 
     def removePiece(self):
         self.piece = None
+        self.updatePixmap()
+
+    def pick(self):
+        self.picked = True
+        self.updatePixmap()
+
+    def unpick(self):
+        self.picked = False
         self.updatePixmap()
 
     def getCoordinates(self):
