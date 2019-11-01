@@ -7,7 +7,8 @@ from config import *
 
 
 class BoardWidget(QtWidgets.QWidget):
-    gameEnded = QtCore.pyqtSignal()
+    gameEnded = QtCore.pyqtSignal(str)
+    moveMade = QtCore.pyqtSignal(chess.Move)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -96,17 +97,24 @@ class BoardWidget(QtWidgets.QWidget):
                 secondCellPiece = self.board.piece_at(secondSquare)
                 self.secondCell.setPiece(secondCellPiece)
 
+                self.moveMade.emit(move)
+
+                if self.board.result() != '*':
+                    self.gameStarted = False
+                    self.gameEnded.emit(self.board.result())
+
             self.firstCell.unpick()
 
             self.firstCell = None
             self.secondCell = None
 
-        if self.getResult() != '*':
-            self.gameStarted = False
-            self.gameEnded.emit()
+    def surrender(self, loser):
+        self.gameStarted = False
+
+        if loser == chess.WHITE:
+            self.gameEnded.emit("0-1")
+        else:
+            self.gameEnded.emit("1-0")
 
     def isGameStarted(self):
         return self.gameStarted
-
-    def getResult(self):
-        return self.board.result()

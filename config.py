@@ -1,5 +1,5 @@
 from PyQt5.QtGui import QColor
-
+from chess import WHITE, BLACK
 
 FIELD_SIZE = (360, 360)
 
@@ -11,3 +11,6 @@ P_DIR = "./Pieces/"  # Piece images directory
 P_EXT = ".png"  # Piece images extension
 
 DB_PATH = "./statistics.db"
+
+WHITE_SIDE = WHITE
+BLACK_SIDE = BLACK
