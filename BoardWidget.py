@@ -1,4 +1,3 @@
-
 from PyQt5 import QtWidgets, QtCore, QtGui
 import chess
 
@@ -44,10 +43,7 @@ class BoardWidget(QtWidgets.QWidget):
                 cell = self.cellsLayout.itemAtPosition(7 - row, col).widget()
                 cell.removePiece()
 
-    def startGame(self, force=False):
-        if self.gameStarted and force is False:
-            return False
-
+    def startGame(self):
         self.clearBoard()
         self.board.reset()
 
@@ -57,15 +53,11 @@ class BoardWidget(QtWidgets.QWidget):
 
                 square = chess.square(col, row)
                 piece = self.board.piece_at(square)
-
-                if piece is not None:
-                    cell.setPiece(piece)
+                cell.setPiece(piece)
 
         self.gameStarted = True
         self.firstCell = None
         self.secondCell = None
-
-        return True
 
     def cellClicked(self):
         if self.gameStarted is False:
@@ -91,7 +83,6 @@ class BoardWidget(QtWidgets.QWidget):
                 self.board.push(move)
 
                 firstCellPiece = self.board.piece_at(firstSquare)
-
                 self.firstCell.setPiece(firstCellPiece)
 
                 secondCellPiece = self.board.piece_at(secondSquare)
@@ -99,9 +90,10 @@ class BoardWidget(QtWidgets.QWidget):
 
                 self.moveMade.emit(move)
 
-                if self.board.result() != '*':
+                result = self.board.result()
+                if result != '*':
                     self.gameStarted = False
-                    self.gameEnded.emit(self.board.result())
+                    self.gameEnded.emit(result)
 
             self.firstCell.unpick()
 

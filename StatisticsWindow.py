@@ -20,14 +20,14 @@ class StatisticsWindow(QtWidgets.QMainWindow,
 
         self.con = sqlite3.connect(DB_PATH)
 
-        cur = self.con.cursor()
+        cur = self.con.execute("SELECT * FROM Players")
 
-        columns_info = cur.execute("PRAGMA table_info(Players);")
-        self.column_names = tuple(column_info[1].replace('_', ' ').capitalize()
-                                  for column_info in columns_info)
+        self.columnNames = tuple(descr[0] for descr in cur.description)
+        self.columnNames = tuple(name.replace('_', ' ').capitalize()
+                                 for name in self.columnNames)
 
-        self.statisticsTable.setColumnCount(len(self.column_names))
-        self.statisticsTable.setHorizontalHeaderLabels(self.column_names)
+        self.statisticsTable.setColumnCount(len(self.columnNames))
+        self.statisticsTable.setHorizontalHeaderLabels(self.columnNames)
 
         self.updateStatisticsTable()
 
@@ -35,7 +35,7 @@ class StatisticsWindow(QtWidgets.QMainWindow,
         self.statisticsTable.setRowCount(0)
 
         cur = self.con.cursor()
-        players = cur.execute("""SELECT * FROM Players""")
+        players = cur.execute("SELECT * FROM Players").fetchall()
 
         for row, player in enumerate(players):
             self.statisticsTable.setRowCount(row + 1)
@@ -53,8 +53,10 @@ class StatisticsWindow(QtWidgets.QMainWindow,
 
     def openContextMenu(self, pos):
         self.menu = QtWidgets.QMenu(self)
+
         addPlayerAction = QtWidgets.QAction("Add player", self.menu)
         addPlayerAction.triggered.connect(self.addPlayer)
+
         self.menu.addAction(addPlayerAction)
 
         tableClick = self.statisticsTable.itemAt(pos)
@@ -108,7 +110,9 @@ FROM Players WHERE id = ?""",
             return
 
         cur = self.con.cursor()
-        cur.execute("""UPDATE Players SET nickname = ? WHERE id = ?""",
+        cur.execute("""UPDATE Players
+SET nickname = ?
+WHERE id = ?""",
                     (new_nickname, playerId))
 
         self.con.commit()
