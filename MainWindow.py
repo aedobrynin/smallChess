@@ -27,9 +27,9 @@ class MainWindow(QtWidgets.QMainWindow, MainWindowUi.Ui_mainWindow):
         self.board.moveMade.connect(self.inGameUpdate)
 
         self.firstPlayerSurrenderBtn.clicked.connect(self.surrender)
-        self.secondPlayerSurrenderBtn.clicked.connect(self.surrender)
-
         self.firstPlayerOfferDrawBtn.clicked.connect(self.offerDraw)
+
+        self.secondPlayerSurrenderBtn.clicked.connect(self.surrender)
         self.secondPlayerOfferDrawBtn.clicked.connect(self.offerDraw)
 
     def newGame(self):
@@ -50,13 +50,11 @@ This game is not ended.""",
         self.choosePlayersDialog = ChoosePlayersDialog(self)
         playersChoosen = self.choosePlayersDialog.exec()
 
-        if playersChoosen:
-            self.firstPlayer = self.choosePlayersDialog.getFirstPlayerData()
-            self.secondPlayer = self.choosePlayersDialog.getSecondPlayerData()
-            self.choosePlayersDialog.close()
-        else:
-            self.choosePlayersDialog.close()
+        if playersChoosen is False:
             return
+
+        self.firstPlayer = self.choosePlayersDialog.getFirstPlayerData()
+        self.secondPlayer = self.choosePlayersDialog.getSecondPlayerData()
 
         self.firstPlayerNickname.setText(self.firstPlayer[1])
         self.secondPlayerNickname.setText(self.secondPlayer[1])
@@ -65,7 +63,7 @@ This game is not ended.""",
 
         self.actionSeeStatistics.setEnabled(False)
 
-        self.board.startGame(force=True)
+        self.board.startGame()
 
     def inGameUpdate(self, move):
         self.firstPlayerSurrenderBtn.setEnabled(True)
@@ -90,15 +88,18 @@ This game is not ended.""",
 
         cur = self.con.cursor()
 
-        firstPlayerStats = list(cur.execute("""SELECT games_played, games_won,
+        selectRequest = """SELECT games_played, games_won,
 games_draw, games_lost
 FROM Players
-WHERE id = ?""", (self.firstPlayer[0], )).fetchone())
+WHERE id = ?"""
 
-        secondPlayerStats = list(cur.execute("""SELECT games_played, games_won,
-games_draw, games_lost
-FROM Players
-WHERE id = ?""", (self.secondPlayer[0], )).fetchone())
+        firstPlayerStats = cur.execute(selectRequest,
+                                       (self.firstPlayer[0], )).fetchone()
+        firstPlayerStats = list(firstPlayerStats)
+
+        secondPlayerStats = cur.execute(selectRequest,
+                                        (self.secondPlayer[0], )).fetchone()
+        secondPlayerStats = list(secondPlayerStats)
 
         firstPlayerStats[0] += 1
         secondPlayerStats[0] += 1
@@ -113,32 +114,28 @@ WHERE id = ?""", (self.secondPlayer[0], )).fetchone())
             firstPlayerStats[3] += 1
             secondPlayerStats[1] += 1
 
-        cur.execute("""UPDATE Players
+        updateRequest = """UPDATE Players
 SET games_played = ?,
     games_won = ?,
     games_draw = ?,
     games_lost = ?
 
-WHERE id = ?""", (*firstPlayerStats, self.firstPlayer[0]))
+WHERE id = ?"""
 
-        cur.execute("""UPDATE Players
-SET games_played = ?,
-    games_won = ?,
-    games_draw = ?,
-    games_lost = ?
-WHERE id = ?""", (*secondPlayerStats, self.secondPlayer[0]))
+        cur.execute(updateRequest, (*firstPlayerStats, self.firstPlayer[0]))
+
+        cur.execute(updateRequest, (*secondPlayerStats, self.secondPlayer[0]))
 
         self.con.commit()
         self.con.close()
 
-        self.firstPlayerSurrenderBtn.setEnabled(False)
-        self.secondPlayerSurrenderBtn.setEnabled(False)
-
         self.firstPlayerOfferDrawBtn.setEnabled(False)
         self.firstPlayerOfferDrawBtn.setText("Offer a draw")
+        self.firstPlayerSurrenderBtn.setEnabled(False)
 
         self.secondPlayerOfferDrawBtn.setEnabled(False)
         self.secondPlayerOfferDrawBtn.setText("Offer a draw")
+        self.secondPlayerSurrenderBtn.setEnabled(False)
 
         self.actionSeeStatistics.setEnabled(True)
 

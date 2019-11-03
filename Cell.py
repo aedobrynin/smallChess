@@ -1,5 +1,6 @@
+from PyQt5 import QtWidgets, QtCore, QtGui
+
 from config import *
-from PyQt5 import QtWidgets, QtGui, QtCore
 
 
 class Cell(QtWidgets.QLabel):
@@ -16,6 +17,7 @@ class Cell(QtWidgets.QLabel):
 
         self.color = color
         self.picked = False
+        self.piece = None
 
         self.initUi()
         self.updatePixmap()
@@ -23,7 +25,6 @@ class Cell(QtWidgets.QLabel):
     def initUi(self):
         self.setFixedSize(self.width, self.height)
         self.pixmap = QtGui.QPixmap(self.width, self.height)
-        self.piece = None
 
     def mousePressEvent(self, event):
         self.clicked.emit()
