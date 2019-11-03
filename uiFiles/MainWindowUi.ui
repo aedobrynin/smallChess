@@ -94,7 +94,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Offer draw</string>
+        <string>Offer a draw</string>
        </property>
       </widget>
      </item>

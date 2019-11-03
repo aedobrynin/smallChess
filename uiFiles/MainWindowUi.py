@@ -96,7 +96,7 @@ class Ui_mainWindow(object):
         self.firstPlayerSurrenderBtn.setText(_translate("mainWindow", "Surrender"))
         self.firstPlayerOfferDrawBtn.setText(_translate("mainWindow", "Offer a draw"))
         self.firstPlayerNickname.setText(_translate("mainWindow", "First player"))
-        self.secondPlayerOfferDrawBtn.setText(_translate("mainWindow", "Offer draw"))
+        self.secondPlayerOfferDrawBtn.setText(_translate("mainWindow", "Offer a draw"))
         self.secondPlayerSurrenderBtn.setText(_translate("mainWindow", "Surrender"))
         self.secondPlayerNickname.setText(_translate("mainWindow", "Second player"))
         self.actions.setTitle(_translate("mainWindow", "Actions"))

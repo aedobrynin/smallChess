@@ -78,8 +78,8 @@ This game is not ended.""",
             self.firstPlayerOfferDrawBtn.setEnabled(False)
             self.secondPlayerOfferDrawBtn.setEnabled(True)
 
-        self.firstPlayerOfferDrawBtn.setText("Offer draw")
-        self.secondPlayerOfferDrawBtn.setText("Offer draw")
+        self.firstPlayerOfferDrawBtn.setText("Offer a draw")
+        self.secondPlayerOfferDrawBtn.setText("Offer a draw")
 
         self.movesList.addItem(move.uci())
 
@@ -143,7 +143,7 @@ WHERE id = ?""", (*secondPlayerStats, self.secondPlayer[0]))
         self.actionSeeStatistics.setEnabled(True)
 
     def offerDraw(self):
-        if self.sender().text() == "Offer draw":
+        if self.sender().text() == "Offer a draw":
             """Check if draw can be claimed without opponent approval"""
             if self.board.isPossibleDrawWithoutOpponentApproval():
                 self.board.draw()
