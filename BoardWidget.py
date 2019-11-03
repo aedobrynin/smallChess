@@ -108,6 +108,12 @@ class BoardWidget(QtWidgets.QWidget):
             self.firstCell = None
             self.secondCell = None
 
+    def getCurrentTurn(self):
+        return self.board.turn
+
+    def isGameStarted(self):
+        return self.gameStarted
+
     def surrender(self, loser):
         self.gameStarted = False
 
@@ -116,5 +122,9 @@ class BoardWidget(QtWidgets.QWidget):
         else:
             self.gameEnded.emit("1-0")
 
-    def isGameStarted(self):
-        return self.gameStarted
+    def isPossibleDrawWithoutOpponentApproval(self):
+        return self.board.can_claim_draw()
+
+    def draw(self):
+        self.gameStarted = False
+        self.gameEnded.emit("1/2-1/2")

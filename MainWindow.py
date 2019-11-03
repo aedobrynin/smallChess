@@ -29,6 +29,9 @@ class MainWindow(QtWidgets.QMainWindow, MainWindowUi.Ui_mainWindow):
         self.firstPlayerSurrenderBtn.clicked.connect(self.surrender)
         self.secondPlayerSurrenderBtn.clicked.connect(self.surrender)
 
+        self.firstPlayerOfferDrawBtn.clicked.connect(self.offerDraw)
+        self.secondPlayerOfferDrawBtn.clicked.connect(self.offerDraw)
+
     def newGame(self):
         gameStarted = self.board.isGameStarted()
 
@@ -68,6 +71,16 @@ This game is not ended.""",
         self.firstPlayerSurrenderBtn.setEnabled(True)
         self.secondPlayerSurrenderBtn.setEnabled(True)
 
+        if self.board.getCurrentTurn() == WHITE_SIDE:
+            self.firstPlayerOfferDrawBtn.setEnabled(True)
+            self.secondPlayerOfferDrawBtn.setEnabled(False)
+        else:
+            self.firstPlayerOfferDrawBtn.setEnabled(False)
+            self.secondPlayerOfferDrawBtn.setEnabled(True)
+
+        self.firstPlayerOfferDrawBtn.setText("Offer draw")
+        self.secondPlayerOfferDrawBtn.setText("Offer draw")
+
         self.movesList.addItem(move.uci())
 
     def gameEnded(self, result):
@@ -105,6 +118,7 @@ SET games_played = ?,
     games_won = ?,
     games_draw = ?,
     games_lost = ?
+
 WHERE id = ?""", (*firstPlayerStats, self.firstPlayer[0]))
 
         cur.execute("""UPDATE Players
@@ -120,7 +134,30 @@ WHERE id = ?""", (*secondPlayerStats, self.secondPlayer[0]))
         self.firstPlayerSurrenderBtn.setEnabled(False)
         self.secondPlayerSurrenderBtn.setEnabled(False)
 
+        self.firstPlayerOfferDrawBtn.setEnabled(False)
+        self.firstPlayerOfferDrawBtn.setText("Offer a draw")
+
+        self.secondPlayerOfferDrawBtn.setEnabled(False)
+        self.secondPlayerOfferDrawBtn.setText("Offer a draw")
+
         self.actionSeeStatistics.setEnabled(True)
+
+    def offerDraw(self):
+        if self.sender().text() == "Offer draw":
+            """Check if draw can be claimed without opponent approval"""
+            if self.board.isPossibleDrawWithoutOpponentApproval():
+                self.board.draw()
+            else:
+                if self.sender() is self.firstPlayerOfferDrawBtn:
+                    self.firstPlayerOfferDrawBtn.setEnabled(False)
+                    self.secondPlayerOfferDrawBtn.setEnabled(True)
+                    self.secondPlayerOfferDrawBtn.setText("Approve a draw")
+                else:
+                    self.secondPlayerOfferDrawBtn.setEnabled(False)
+                    self.firstPlayerOfferDrawBtn.setEnabled(True)
+                    self.firstPlayerOfferDrawBtn.setText("Approve a draw")
+        else:
+            self.board.draw()
 
     def surrender(self):
         if self.sender() is self.firstPlayerSurrenderBtn:

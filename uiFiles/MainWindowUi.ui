@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>570</width>
+    <width>600</width>
     <height>400</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>570</width>
+    <width>600</width>
     <height>400</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>570</width>
+    <width>600</width>
     <height>400</height>
    </size>
   </property>
@@ -39,27 +39,14 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>387</x>
-      <y>10</y>
-      <width>174</width>
-      <height>361</height>
+      <x>388</x>
+      <y>12</y>
+      <width>203</width>
+      <height>351</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="1">
-      <widget class="QListWidget" name="movesList"/>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="secondPlayerSurrenderBtn">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Surrender</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
+    <layout class="QGridLayout" name="rightColumnLayout">
+     <item row="4" column="1" colspan="2">
       <widget class="QPushButton" name="firstPlayerSurrenderBtn">
        <property name="enabled">
         <bool>false</bool>
@@ -69,17 +56,62 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="secondPlayerNickname">
+     <item row="4" column="0">
+      <widget class="QPushButton" name="firstPlayerOfferDrawBtn">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
-        <string>Second player</string>
+        <string>Offer a draw</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="3" column="0" colspan="3">
       <widget class="QLabel" name="firstPlayerNickname">
        <property name="text">
         <string>First player</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="3">
+      <widget class="QListWidget" name="movesList"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="secondPlayerOfferDrawBtn">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Offer draw</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QPushButton" name="secondPlayerSurrenderBtn">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Surrender</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="QLabel" name="secondPlayerNickname">
+       <property name="text">
+        <string>Second player</string>
        </property>
       </widget>
      </item>
@@ -91,7 +123,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>570</width>
+     <width>600</width>
      <height>22</height>
     </rect>
    </property>
