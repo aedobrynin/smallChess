@@ -28,7 +28,7 @@ class BoardWidget(QtWidgets.QWidget):
             for col in range(8):
                 cell = Cell(self, col, row,
                             FIELD_SIZE[0] // 8, FIELD_SIZE[1] // 8)
-                cell.clicked.connect(self.cellClicked)
+                cell.moveMade.connect(self.makeMove)
 
                 if (row + col) % 2 == 0:
                     cell.setColor(BLACK_CELL_COLOR)
@@ -37,68 +37,39 @@ class BoardWidget(QtWidgets.QWidget):
 
                 self.cellsLayout.addWidget(cell, 7 - row, col)
 
-    def clearBoard(self):
+    def updateBoard(self):
         for row in range(8):
             for col in range(8):
                 cell = self.cellsLayout.itemAtPosition(7 - row, col).widget()
-                cell.removePiece()
-
-    def startGame(self):
-        self.clearBoard()
-        self.board.reset()
-
-        for row in range(8):
-            for col in range(8):
-                cell = self.cellsLayout.itemAtPosition(7 - row, col).widget()
-
                 square = chess.square(col, row)
                 piece = self.board.piece_at(square)
                 cell.setPiece(piece)
 
+    def startGame(self):
+        self.board.reset()
+        self.updateBoard()
         self.gameStarted = True
-        self.firstCell = None
-        self.secondCell = None
 
-    def cellClicked(self):
+    def makeMove(self, firstCell, secondCell):
         if self.gameStarted is False:
             return
 
-        cell = self.sender()
+        firstSquare = chess.square(*firstCell.getCoordinates())
+        secondSquare = chess.square(*secondCell.getCoordinates())
 
-        if self.firstCell is None:
-            piece = cell.getPiece()
-            if piece is not None and piece.color == self.board.turn:
-                self.firstCell = cell
-                self.firstCell.pick()
-        else:
-            self.secondCell = cell
+        move = chess.Move(firstSquare, secondSquare)
 
-        if self.secondCell is not None:
-            firstSquare = chess.square(*self.firstCell.getCoordinates())
-            secondSquare = chess.square(*self.secondCell.getCoordinates())
+        if move in self.board.legal_moves:
+            self.board.push(move)
 
-            move = chess.Move(firstSquare, secondSquare)
+            self.updateBoard()
 
-            if move in self.board.legal_moves:
-                self.board.push(move)
+            self.moveMade.emit(move)
 
-                firstCellPiece = self.board.piece_at(firstSquare)
-                self.firstCell.setPiece(firstCellPiece)
-
-                secondCellPiece = self.board.piece_at(secondSquare)
-                self.secondCell.setPiece(secondCellPiece)
-
-                self.moveMade.emit(move)
-
-                result = self.board.result()
-                if result != '*':
-                    self.gameStarted = False
-                    self.gameEnded.emit(result)
-
-            self.firstCell.unpick()
-
-            self.firstCell = None
-            self.secondCell = None
+            result = self.board.result()
+            if result != '*':
+                self.gameStarted = False
+                self.gameEnded.emit(result)
 
     def getCurrentTurn(self):
         return self.board.turn
