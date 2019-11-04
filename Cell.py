@@ -2,11 +2,9 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 from config import *
 
-class Cell(QtWidgets.QLabel):
-    pass
 
 class Cell(QtWidgets.QLabel):
-    moveMade = QtCore.pyqtSignal(Cell, Cell)
+    clicked = QtCore.pyqtSignal()
 
     def __init__(self, parent, row, col, width, height, color=QtCore.Qt.black):
         super().__init__(parent)
@@ -18,46 +16,24 @@ class Cell(QtWidgets.QLabel):
         self.height = height
 
         self.color = color
+        self.picked = False
         self.piece = None
 
         self.initUi()
         self.updatePixmap()
 
     def initUi(self):
-        self.setAcceptDrops(True)
         self.setFixedSize(self.width, self.height)
         self.pixmap = QtGui.QPixmap(self.width, self.height)
 
-    def mouseMoveEvent(self, e):
-        if self.piece is None:
-            return
-
-        mimeData = QtCore.QMimeData()
-        drag = QtGui.QDrag(self)
-        drag.setPixmap(QtGui.QPixmap(P_DIR + self.piece.symbol() + P_EXT))
-        drag.setMimeData(mimeData)
-        drag.setHotSpot(e.pos() - self.rect().topLeft())
-
-        cursor = QtGui.QPixmap(1, 1)
-        cursor.fill(QtCore.Qt.transparent)
-        drag.setDragCursor(cursor, QtCore.Qt.MoveAction)
-        dropAction = drag.exec(QtCore.Qt.MoveAction)
-
-    def dragEnterEvent(self, event):
-        event.accept()
-
-    def dropEvent(self, event):
-        source = event.source()
-
-        if self is source:
-            event.ignore()
-            return
-
-        event.accept()
-        self.moveMade.emit(source, self)
+    def mousePressEvent(self, event):
+        self.clicked.emit()
 
     def updatePixmap(self):
-        self.pixmap.fill(self.color)
+        if self.picked:
+            self.pixmap.fill(PICKED_CELL_COLOR)
+        else:
+            self.pixmap.fill(self.color)
 
         if self.piece is not None:
             painter = QtGui.QPainter(self.pixmap)
@@ -79,6 +55,14 @@ class Cell(QtWidgets.QLabel):
 
     def removePiece(self):
         self.piece = None
+        self.updatePixmap()
+
+    def pick(self):
+        self.picked = True
+        self.updatePixmap()
+
+    def unpick(self):
+        self.picked = False
         self.updatePixmap()
 
     def getCoordinates(self):
