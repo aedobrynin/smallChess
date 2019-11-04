@@ -3,7 +3,7 @@ import sqlite3
 
 from StatisticsWindow import StatisticsWindow
 from BoardWidget import BoardWidget
-from ChoosePlayersDialog import ChoosePlayersDialog
+from NewGameDialog import NewGameDialog
 
 from config import *
 
@@ -47,14 +47,14 @@ This game is not ended.""",
             if force != QtWidgets.QMessageBox.Yes:
                 return
 
-        self.choosePlayersDialog = ChoosePlayersDialog(self)
-        playersChoosen = self.choosePlayersDialog.exec()
+        self.newGameDialog = NewGameDialog(self)
+        playersChoosen = self.newGameDialog.exec()
 
         if playersChoosen is False:
             return
 
-        self.firstPlayer = self.choosePlayersDialog.getFirstPlayerData()
-        self.secondPlayer = self.choosePlayersDialog.getSecondPlayerData()
+        self.firstPlayer = self.newGameDialog.getFirstPlayerData()
+        self.secondPlayer = self.newGameDialog.getSecondPlayerData()
 
         self.firstPlayerNickname.setText(self.firstPlayer[1])
         self.secondPlayerNickname.setText(self.secondPlayer[1])
@@ -79,7 +79,8 @@ This game is not ended.""",
         self.firstPlayerOfferDrawBtn.setText("Offer a draw")
         self.secondPlayerOfferDrawBtn.setText("Offer a draw")
 
-        self.movesList.addItem(move.uci())
+        movesQuantity = self.board.getMovesQuantity()
+        self.movesList.addItem(f"{movesQuantity}. {move.uci()}")
 
     def gameEnded(self, result):
         self.movesList.addItem(result)

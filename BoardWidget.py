@@ -91,3 +91,6 @@ class BoardWidget(QtWidgets.QWidget):
     def draw(self):
         self.gameStarted = False
         self.gameEnded.emit("1/2-1/2")
+
+    def getMovesQuantity(self):
+        return len(self.board.move_stack)

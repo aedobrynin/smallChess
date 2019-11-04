@@ -3,11 +3,11 @@ import sqlite3
 
 from config import *
 
-import uiFiles.ChoosePlayersDialogUi as ChoosePlayersDialogUi
+import uiFiles.NewGameDialogUi as NewGameDialogUi
 
 
-class ChoosePlayersDialog(QtWidgets.QDialog,
-                          ChoosePlayersDialogUi.Ui_choosePlayersDialog):
+class NewGameDialog(QtWidgets.QDialog,
+                    NewGameDialogUi.Ui_newGameDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -19,6 +19,11 @@ class ChoosePlayersDialog(QtWidgets.QDialog,
             connect(self.startGameBtnState)
         self.secondPlayerBox.currentIndexChanged.\
             connect(self.startGameBtnState)
+
+        self.timeLimitCBox.stateChanged.connect(self.widgetStates)
+        self.minutesSBox.valueChanged.connect(self.widgetStates)
+        self.secondsSBox.valueChanged.connect(self.widgetStates)
+
         self.startGameBtn.clicked.connect(self.accept)
 
         self.con = sqlite3.connect(DB_PATH)
@@ -34,11 +39,32 @@ FROM Players""").fetchall()
             self.secondPlayerBox.addItem(nickname, variant)
 
     def startGameBtnState(self):
+        state = True
+
         if self.firstPlayerBox.currentData() == \
            self.secondPlayerBox.currentData():
-            self.startGameBtn.setEnabled(False)
+            state = False
+
+        if self.timeLimitCBox.checkState() == QtCore.Qt.Checked and \
+           self.secondsSBox.value() == 0 and \
+           self.minutesSBox.value() == 0:
+            state = False
+
+        self.startGameBtn.setEnabled(state)
+
+    def timePickBtnStates(self):
+        if self.timeLimitCBox.checkState() == QtCore.Qt.Checked:
+            self.secondsSBox.setEnabled(True)
+            self.minutesSBox.setEnabled(True)
         else:
-            self.startGameBtn.setEnabled(True)
+            self.secondsSBox.setEnabled(False)
+            self.minutesSBox.setEnabled(False)
+        self.seconds.setEnabled(True)
+        self.minutes.setEnabled(True)
+
+    def widgetStates(self):
+        self.timePickBtnStates()
+        self.startGameBtnState()
 
     def getFirstPlayerData(self):
         return (self.firstPlayerBox.currentData(),
