@@ -2,8 +2,10 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 from config import *
 
+
 class Cell(QtWidgets.QLabel):
     pass
+
 
 class Cell(QtWidgets.QLabel):
     moveMade = QtCore.pyqtSignal(Cell, Cell)
