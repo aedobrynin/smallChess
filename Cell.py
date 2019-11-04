@@ -2,8 +2,10 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 from config import *
 
+
 class Cell(QtWidgets.QLabel):
     pass
+
 
 class Cell(QtWidgets.QLabel):
     moveMade = QtCore.pyqtSignal(Cell, Cell)
@@ -28,20 +30,20 @@ class Cell(QtWidgets.QLabel):
         self.setFixedSize(self.width, self.height)
         self.pixmap = QtGui.QPixmap(self.width, self.height)
 
-    def mouseMoveEvent(self, e):
+    def mouseMoveEvent(self, event):
         if self.piece is None:
             return
 
-        mimeData = QtCore.QMimeData()
         drag = QtGui.QDrag(self)
+        drag.setMimeData(QtCore.QMimeData())
         drag.setPixmap(QtGui.QPixmap(P_DIR + self.piece.symbol() + P_EXT))
-        drag.setMimeData(mimeData)
-        drag.setHotSpot(e.pos() - self.rect().topLeft())
+        drag.setHotSpot(event.pos() - self.rect().topLeft())
 
         cursor = QtGui.QPixmap(1, 1)
         cursor.fill(QtCore.Qt.transparent)
+
         drag.setDragCursor(cursor, QtCore.Qt.MoveAction)
-        dropAction = drag.exec(QtCore.Qt.MoveAction)
+        drag.exec(QtCore.Qt.MoveAction)
 
     def dragEnterEvent(self, event):
         event.accept()
@@ -83,6 +85,3 @@ class Cell(QtWidgets.QLabel):
 
     def getCoordinates(self):
         return self.row, self.col
-
-    def getPiece(self):
-        return self.piece
