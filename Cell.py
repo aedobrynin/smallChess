@@ -85,6 +85,3 @@ class Cell(QtWidgets.QLabel):
 
     def getCoordinates(self):
         return self.row, self.col
-
-    def getPiece(self):
-        return self.piece
