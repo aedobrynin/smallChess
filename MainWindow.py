@@ -4,6 +4,7 @@ import sqlite3
 from StatisticsWindow import StatisticsWindow
 from BoardWidget import BoardWidget
 from NewGameDialog import NewGameDialog
+from ChessClock import ChessClock
 
 from config import *
 
@@ -32,6 +33,14 @@ class MainWindow(QtWidgets.QMainWindow, MainWindowUi.Ui_mainWindow):
         self.secondPlayerSurrenderBtn.clicked.connect(self.surrender)
         self.secondPlayerOfferDrawBtn.clicked.connect(self.offerDraw)
 
+        self.firstPlayerClock = ChessClock(parent=self)
+        self.firstPlayerClock.timeIsOver.connect(self.timeIsOver)
+        self.rightColumnLayout.addWidget(self.firstPlayerClock, 3, 1)
+
+        self.secondPlayerClock = ChessClock(parent=self)
+        self.secondPlayerClock.timeIsOver.connect(self.timeIsOver)
+        self.rightColumnLayout.addWidget(self.secondPlayerClock, 0, 1)
+
     def newGame(self):
         gameStarted = self.board.isGameStarted()
 
@@ -49,12 +58,18 @@ This game is not ended.""",
 
         self.newGameDialog = NewGameDialog(self)
         playersChoosen = self.newGameDialog.exec()
-
         if playersChoosen is False:
             return
 
         self.firstPlayer = self.newGameDialog.getFirstPlayerData()
         self.secondPlayer = self.newGameDialog.getSecondPlayerData()
+
+        timerData = self.newGameDialog.getTimerData()
+        self.countTime = timerData[0]
+
+        if self.countTime:
+            self.firstPlayerClock.setTime(timerData[1])
+            self.secondPlayerClock.setTime(timerData[1])
 
         self.firstPlayerNickname.setText(self.firstPlayer[1])
         self.secondPlayerNickname.setText(self.secondPlayer[1])
@@ -65,9 +80,22 @@ This game is not ended.""",
 
         self.board.startGame()
 
+    def updateClocks(self):
+        if self.countTime is False:
+            return
+
+        if self.board.getCurrentTurn() == WHITE_SIDE:
+            self.secondPlayerClock.stop()
+            self.firstPlayerClock.start()
+        else:
+            self.firstPlayerClock.stop()
+            self.secondPlayerClock.start()
+
     def inGameUpdate(self, move):
         self.firstPlayerSurrenderBtn.setEnabled(True)
         self.secondPlayerSurrenderBtn.setEnabled(True)
+
+        self.updateClocks()
 
         if self.board.getCurrentTurn() == WHITE_SIDE:
             self.firstPlayerOfferDrawBtn.setEnabled(True)
@@ -81,9 +109,24 @@ This game is not ended.""",
 
         movesQuantity = self.board.getMovesQuantity()
         self.movesList.addItem(f"{movesQuantity}. {move.uci()}")
+        self.movesList.scrollToBottom()
 
     def gameEnded(self, result):
+        self.firstPlayerClock.stop()
+        self.secondPlayerClock.stop()
+
+        self.firstPlayerOfferDrawBtn.setEnabled(False)
+        self.firstPlayerOfferDrawBtn.setText("Offer a draw")
+        self.firstPlayerSurrenderBtn.setEnabled(False)
+
+        self.secondPlayerOfferDrawBtn.setEnabled(False)
+        self.secondPlayerOfferDrawBtn.setText("Offer a draw")
+        self.secondPlayerSurrenderBtn.setEnabled(False)
+
+        self.actionSeeStatistics.setEnabled(True)
+
         self.movesList.addItem(result)
+        self.movesList.scrollToBottom()
 
         self.con = sqlite3.connect(DB_PATH)
 
@@ -130,16 +173,6 @@ WHERE id = ?"""
         self.con.commit()
         self.con.close()
 
-        self.firstPlayerOfferDrawBtn.setEnabled(False)
-        self.firstPlayerOfferDrawBtn.setText("Offer a draw")
-        self.firstPlayerSurrenderBtn.setEnabled(False)
-
-        self.secondPlayerOfferDrawBtn.setEnabled(False)
-        self.secondPlayerOfferDrawBtn.setText("Offer a draw")
-        self.secondPlayerSurrenderBtn.setEnabled(False)
-
-        self.actionSeeStatistics.setEnabled(True)
-
     def offerDraw(self):
         if self.sender().text() == "Offer a draw":
             """Check if draw can be claimed without opponent approval"""
@@ -159,9 +192,21 @@ WHERE id = ?"""
 
     def surrender(self):
         if self.sender() is self.firstPlayerSurrenderBtn:
-            self.board.surrender(WHITE_SIDE)
+            self.board.forceLose(WHITE_SIDE)
         else:
-            self.board.surrender(BLACK_SIDE)
+            self.board.forceLose(BLACK_SIDE)
+
+    def timeIsOver(self):
+        if self.firstPlayerClock.getTime() == 0:
+            if self.board.has_insufficient_material(BLACK_SIDE):
+                self.board.draw()
+            else:
+                self.board.forceLose(WHITE_SIDE)
+        else:
+            if self.board.has_insufficient_material(WHITE_SIDE):
+                self.board.draw()
+            else:
+                self.board.forceLose(BLACK_SIDE)
 
     def openStatisticsWindow(self):
         self.statisticsWindow = StatisticsWindow(self)

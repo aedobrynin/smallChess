@@ -77,13 +77,15 @@ class BoardWidget(QtWidgets.QWidget):
     def isGameStarted(self):
         return self.gameStarted
 
-    def surrender(self, loser):
+    def forceLose(self, loser):
         self.gameStarted = False
-
         if loser == chess.WHITE:
             self.gameEnded.emit("0-1")
         else:
             self.gameEnded.emit("1-0")
+
+    def has_insufficient_material(self, color):
+        return self.board.has_insufficient_material(color)
 
     def isPossibleDrawWithoutOpponentApproval(self):
         return self.board.can_claim_draw()

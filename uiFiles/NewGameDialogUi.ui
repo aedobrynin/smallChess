@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>370</width>
-    <height>150</height>
+    <height>160</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>370</width>
-    <height>150</height>
+    <height>160</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>370</width>
-    <height>150</height>
+    <height>160</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,7 @@
    <property name="geometry">
     <rect>
      <x>5</x>
-     <y>1</y>
+     <y>3</y>
      <width>358</width>
      <height>153</height>
     </rect>
@@ -122,7 +122,7 @@
     <item row="2" column="0">
      <widget class="QCheckBox" name="timeLimitCBox">
       <property name="text">
-       <string>With time limit</string>
+       <string>Time limit</string>
       </property>
      </widget>
     </item>

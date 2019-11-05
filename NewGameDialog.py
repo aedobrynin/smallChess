@@ -59,8 +59,6 @@ FROM Players""").fetchall()
         else:
             self.secondsSBox.setEnabled(False)
             self.minutesSBox.setEnabled(False)
-        self.seconds.setEnabled(True)
-        self.minutes.setEnabled(True)
 
     def widgetStates(self):
         self.timePickBtnStates()
@@ -73,6 +71,10 @@ FROM Players""").fetchall()
     def getSecondPlayerData(self):
         return (self.secondPlayerBox.currentData(),
                 self.secondPlayerBox.currentText())
+
+    def getTimerData(self):
+        return (self.timeLimitCBox.checkState() == QtCore.Qt.Checked,
+                self.minutesSBox.value() * 60 + self.secondsSBox.value())
 
     def closeEvent(self, event):
         self.con.close()
