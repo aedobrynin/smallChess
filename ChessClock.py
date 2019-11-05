@@ -6,10 +6,10 @@ class ChessClock(QtWidgets.QLabel):
     timeIsOver = QtCore.pyqtSignal()
     timeFormat = "{:02d}:{:02d}"
 
-    def __init__(self, timeInSeconds=0, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.time = timeInSeconds * 1000
+        self.time = 0
 
         self.clock = QtCore.QTimer(None)
         self.clock.setTimerType(QtCore.Qt.PreciseTimer)
@@ -22,6 +22,9 @@ class ChessClock(QtWidgets.QLabel):
         self.updateTimer.setInterval(1000)
         self.updateTimer.timeout.connect(self.updateLabel)
 
+        self.initUi()
+
+    def initUi(self):
         self.setAlignment(QtCore.Qt.AlignCenter)
         self.setText("00:00")
 
