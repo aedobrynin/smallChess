@@ -34,11 +34,11 @@ class MainWindow(QtWidgets.QMainWindow, MainWindowUi.Ui_mainWindow):
         self.secondPlayerSurrenderBtn.clicked.connect(self.surrender)
         self.secondPlayerOfferDrawBtn.clicked.connect(self.offerDraw)
 
-        self.firstPlayerClock = ChessClock(parent=self)
+        self.firstPlayerClock = ChessClock(self)
         self.firstPlayerClock.timeIsOver.connect(self.timeIsOver)
         self.rightColumnLayout.addWidget(self.firstPlayerClock, 3, 1)
 
-        self.secondPlayerClock = ChessClock(parent=self)
+        self.secondPlayerClock = ChessClock(self)
         self.secondPlayerClock.timeIsOver.connect(self.timeIsOver)
         self.rightColumnLayout.addWidget(self.secondPlayerClock, 0, 1)
 
@@ -58,8 +58,9 @@ This game is not ended.""",
                 return
 
         self.newGameDialog = NewGameDialog(self)
-        playersChoosen = self.newGameDialog.exec()
-        if playersChoosen is False:
+        dataEnterSuccessful = self.newGameDialog.exec()
+
+        if dataEnterSuccessful == 0:
             return
 
         self.firstPlayer = self.newGameDialog.getFirstPlayerData()
@@ -118,10 +119,12 @@ This game is not ended.""",
 
         self.firstPlayerOfferDrawBtn.setEnabled(False)
         self.firstPlayerOfferDrawBtn.setText("Offer a draw")
+
         self.firstPlayerSurrenderBtn.setEnabled(False)
 
         self.secondPlayerOfferDrawBtn.setEnabled(False)
         self.secondPlayerOfferDrawBtn.setText("Offer a draw")
+
         self.secondPlayerSurrenderBtn.setEnabled(False)
 
         self.actionSeeStatistics.setEnabled(True)
@@ -164,11 +167,9 @@ SET games_played = ?,
     games_won = ?,
     games_draw = ?,
     games_lost = ?
-
 WHERE id = ?"""
 
         cur.execute(updateRequest, (*firstPlayerStats, self.firstPlayer[0]))
-
         cur.execute(updateRequest, (*secondPlayerStats, self.secondPlayer[0]))
 
         self.con.commit()
@@ -177,7 +178,7 @@ WHERE id = ?"""
     def offerDraw(self):
         if self.sender().text() == "Offer a draw":
             """Check if draw can be claimed without opponent approval"""
-            if self.board.isPossibleDrawWithoutOpponentApproval():
+            if self.board.isDrawPossibleWithoutOpponentApproval():
                 self.board.draw()
             else:
                 if self.sender() is self.firstPlayerOfferDrawBtn:
@@ -199,12 +200,12 @@ WHERE id = ?"""
 
     def timeIsOver(self):
         if self.firstPlayerClock.getTime() == 0:
-            if self.board.has_insufficient_material(chess.BLACK):
+            if self.board.hasInsufficientMaterial(chess.BLACK):
                 self.board.draw()
             else:
                 self.board.forceLose(chess.WHITE)
         else:
-            if self.board.has_insufficient_material(chess.WHITE):
+            if self.board.hasInsufficientMaterial(chess.WHITE):
                 self.board.draw()
             else:
                 self.board.forceLose(chess.BLACK)

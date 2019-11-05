@@ -22,34 +22,24 @@ class PromotionDialog(QtWidgets.QDialog,
         iconSize = QtCore.QSize(CELL_SIZE + 10, CELL_SIZE + 10)
 
         self.promoteToKnight.setIconSize(iconSize)
-        self.promoteToKnight.setIcon(QtGui.QIcon(P_DIR +
-                                                 ('N' if self.piecesColor ==
-                                                  chess.WHITE
-                                                  else 'n') +
-                                                 P_EXT))
+        self.promoteToKnight.setIcon(QtGui.QIcon(self.getPathToIcon('n')))
 
         self.promoteToBishop.setIconSize(iconSize)
-        self.promoteToBishop.setIcon(QtGui.QIcon(P_DIR +
-                                                 ('B' if self.piecesColor ==
-                                                  chess.WHITE
-                                                  else 'b') +
-                                                 P_EXT))
+        self.promoteToBishop.setIcon(QtGui.QIcon(self.getPathToIcon('b')))
 
         self.promoteToRook.setIconSize(iconSize)
-        self.promoteToRook.setIcon(QtGui.QIcon(P_DIR +
-                                               ('R' if self.piecesColor ==
-                                                chess.WHITE
-                                                else 'r') +
-                                               P_EXT))
+        self.promoteToRook.setIcon(QtGui.QIcon(self.getPathToIcon('r')))
 
         self.promoteToQueen.setIconSize(iconSize)
-        self.promoteToQueen.setIcon(QtGui.QIcon(P_DIR +
-                                                ('Q' if self.piecesColor ==
-                                                 chess.WHITE
-                                                 else 'q') +
-                                                P_EXT))
+        self.promoteToQueen.setIcon(QtGui.QIcon(self.getPathToIcon('q')))
 
         self.promotionButtons.buttonClicked.connect(self.promote)
+
+    def getPathToIcon(self, pieceLetter):
+        return P_DIR +\
+               (pieceLetter.upper() if self.piecesColor == chess.WHITE
+                else pieceLetter.lower()) +\
+               P_EXT
 
     def promote(self, button):
         if button is self.promoteToKnight:

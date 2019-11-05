@@ -10,7 +10,8 @@ class Cell(QtWidgets.QLabel):
 class Cell(QtWidgets.QLabel):
     moveMade = QtCore.pyqtSignal(Cell, Cell)
 
-    def __init__(self, parent, row, col, width, height, color=QtCore.Qt.black):
+    def __init__(self, parent, row, col,
+                 width, height, color=BLACK_CELL_COLOR):
         super().__init__(parent)
 
         self.row = row
@@ -43,7 +44,7 @@ class Cell(QtWidgets.QLabel):
         cursor = QtGui.QPixmap(1, 1)
         cursor.fill(QtCore.Qt.transparent)
         drag.setDragCursor(cursor, QtCore.Qt.MoveAction)
-        dropAction = drag.exec(QtCore.Qt.MoveAction)
+        drag.exec(QtCore.Qt.MoveAction)
 
     def dragEnterEvent(self, event):
         event.accept()

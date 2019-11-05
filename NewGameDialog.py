@@ -33,8 +33,8 @@ class NewGameDialog(QtWidgets.QDialog,
         players = cur.execute("""SELECT id, nickname
 FROM Players""").fetchall()
 
-        for id, nickname in players:
-            variant = QtCore.QVariant(id)
+        for playerId, nickname in players:
+            variant = QtCore.QVariant(playerId)
             self.firstPlayerBox.addItem(nickname, variant)
             self.secondPlayerBox.addItem(nickname, variant)
 
