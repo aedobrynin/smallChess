@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 import chess
 
 from Cell import Cell
+from PromotionDialog import PromotionDialog
 from config import *
 
 
@@ -17,7 +18,7 @@ class BoardWidget(QtWidgets.QWidget):
         self.gameStarted = False
 
     def initUi(self):
-        self.resize(*FIELD_SIZE)
+        self.resize(FIELD_SIZE, FIELD_SIZE)
         self.cellsLayout = QtWidgets.QGridLayout(self)
         self.initBoard()
 
@@ -26,8 +27,7 @@ class BoardWidget(QtWidgets.QWidget):
 
         for row in range(8):
             for col in range(8):
-                cell = Cell(self, col, row,
-                            FIELD_SIZE[0] // 8, FIELD_SIZE[1] // 8)
+                cell = Cell(self, col, row, CELL_SIZE, CELL_SIZE)
                 cell.moveMade.connect(self.makeMove)
 
                 if (row + col) % 2 == 0:
@@ -54,12 +54,31 @@ class BoardWidget(QtWidgets.QWidget):
         if self.gameStarted is False:
             return
 
-        firstSquare = chess.square(*firstCell.getCoordinates())
-        secondSquare = chess.square(*secondCell.getCoordinates())
+        firstCellCoords = firstCell.getCoordinates()
+        secondCellCoords = secondCell.getCoordinates()
 
-        move = chess.Move(firstSquare, secondSquare)
+        firstSquare = chess.square(*firstCellCoords)
+        secondSquare = chess.square(*secondCellCoords)
+
+        promotion = None
+
+        if self.board.piece_at(firstSquare).piece_type == chess.PAWN:
+            if secondCellCoords[1] == 0 or secondCellCoords[1] == 7:
+                promotion = chess.QUEEN
+
+        move = chess.Move(firstSquare, secondSquare, promotion=promotion)
 
         if move in self.board.legal_moves:
+            if promotion is not None:
+                self.promotionDialog = PromotionDialog(self.parent(),
+                                                       self.board.turn)
+                choosen = self.promotionDialog.exec()
+
+                if choosen == 0:
+                    return
+
+                move.promotion = self.promotionDialog.getPromotion()
+
             self.board.push(move)
 
             self.updateBoard()

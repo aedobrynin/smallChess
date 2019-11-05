@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import sqlite3
+import chess
 
 from StatisticsWindow import StatisticsWindow
 from BoardWidget import BoardWidget
@@ -69,7 +70,7 @@ This game is not ended.""",
         self.firstPlayerSurrenderBtn.setEnabled(True)
         self.secondPlayerSurrenderBtn.setEnabled(True)
 
-        if self.board.getCurrentTurn() == WHITE_SIDE:
+        if self.board.getCurrentTurn() == chess.WHITE:
             self.firstPlayerOfferDrawBtn.setEnabled(True)
             self.secondPlayerOfferDrawBtn.setEnabled(False)
         else:
@@ -158,9 +159,9 @@ WHERE id = ?"""
 
     def surrender(self):
         if self.sender() is self.firstPlayerSurrenderBtn:
-            self.board.surrender(WHITE_SIDE)
+            self.board.surrender(chess.WHITE)
         else:
-            self.board.surrender(BLACK_SIDE)
+            self.board.surrender(chess.BLACK)
 
     def openStatisticsWindow(self):
         self.statisticsWindow = StatisticsWindow(self)

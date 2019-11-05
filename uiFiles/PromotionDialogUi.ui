@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>promotionDialog</class>
+ <widget class="QDialog" name="promotionDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>241</width>
+    <height>90</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pawn promotion</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icon.png</normaloff>../icon.png</iconset>
+  </property>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>6</y>
+     <width>240</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="mainLayout">
+    <item>
+     <widget class="QPushButton" name="promoteToKnight">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>55</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>55</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>45</width>
+        <height>45</height>
+       </size>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">promotionButtons</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="promoteToBishop">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>55</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>55</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>45</width>
+        <height>45</height>
+       </size>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">promotionButtons</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="promoteToRook">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>55</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>55</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>45</width>
+        <height>45</height>
+       </size>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">promotionButtons</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="promoteToQueen">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>55</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>55</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>45</width>
+        <height>45</height>
+       </size>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">promotionButtons</string>
+      </attribute>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="promotionButtons"/>
+ </buttongroups>
+</ui>
