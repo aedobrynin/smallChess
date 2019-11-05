@@ -74,7 +74,7 @@ class BoardWidget(QtWidgets.QWidget):
                                                        self.board.turn)
                 choosen = self.promotionDialog.exec()
 
-                if choosen is False:
+                if choosen == 0:
                     return
 
                 move.promotion = self.promotionDialog.getPromotion()
