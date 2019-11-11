@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
-import sqlite3
 import chess
 
+from Statistics import Statistics
 from StatisticsWindow import StatisticsWindow
 from BoardWidget import BoardWidget
 from NewGameDialog import NewGameDialog
@@ -15,6 +15,8 @@ import uiFiles.MainWindowUi as MainWindowUi
 class MainWindow(QtWidgets.QMainWindow, MainWindowUi.Ui_mainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        self.statistics = Statistics(DB_PATH)
 
         self.setupUi(self)
         self.initUi()
@@ -57,7 +59,7 @@ This game is not ended.""",
             if force != QtWidgets.QMessageBox.Yes:
                 return
 
-        self.newGameDialog = NewGameDialog(self)
+        self.newGameDialog = NewGameDialog(self.statistics, self)
         dataEnterSuccessful = self.newGameDialog.exec()
 
         if dataEnterSuccessful == 0:
@@ -132,21 +134,18 @@ This game is not ended.""",
         self.movesList.addItem(result)
         self.movesList.scrollToBottom()
 
-        self.con = sqlite3.connect(DB_PATH)
-
-        cur = self.con.cursor()
-
-        selectRequest = """SELECT games_played, games_won,
-games_draw, games_lost
-FROM Players
-WHERE id = ?"""
-
-        firstPlayerStats = cur.execute(selectRequest,
-                                       (self.firstPlayer[0], )).fetchone()
+        firstPlayerStats = self.statistics.getPlayersData(self.firstPlayer[0],
+                                                          ("games_played",
+                                                           "games_won",
+                                                           "games_draw",
+                                                           "games_lost"))
         firstPlayerStats = list(firstPlayerStats)
 
-        secondPlayerStats = cur.execute(selectRequest,
-                                        (self.secondPlayer[0], )).fetchone()
+        secondPlayerStats = self.statistics.getPlayersData(self.secondPlayer[0],
+                                                           ("games_played",
+                                                            "games_won",
+                                                            "games_draw",
+                                                            "games_lost"))
         secondPlayerStats = list(secondPlayerStats)
 
         firstPlayerStats[0] += 1
@@ -162,18 +161,19 @@ WHERE id = ?"""
             firstPlayerStats[3] += 1
             secondPlayerStats[1] += 1
 
-        updateRequest = """UPDATE Players
-SET games_played = ?,
-    games_won = ?,
-    games_draw = ?,
-    games_lost = ?
-WHERE id = ?"""
+        self.statistics.updatePlayersData(self.firstPlayer[0],
+                                          zip(("games_played",
+                                               "games_won",
+                                               "games_draw",
+                                               "games_lost"),
+                                              firstPlayerStats))
 
-        cur.execute(updateRequest, (*firstPlayerStats, self.firstPlayer[0]))
-        cur.execute(updateRequest, (*secondPlayerStats, self.secondPlayer[0]))
-
-        self.con.commit()
-        self.con.close()
+        self.statistics.updatePlayersData(self.secondPlayer[0],
+                                          zip(("games_played",
+                                               "games_won",
+                                               "games_draw",
+                                               "games_lost"),
+                                              secondPlayerStats))
 
     def offerDraw(self):
         if self.sender().text() == "Offer a draw":
@@ -211,5 +211,5 @@ WHERE id = ?"""
                 self.board.forceLose(chess.BLACK)
 
     def openStatisticsWindow(self):
-        self.statisticsWindow = StatisticsWindow(self)
+        self.statisticsWindow = StatisticsWindow(self.statistics, self)
         self.statisticsWindow.show()

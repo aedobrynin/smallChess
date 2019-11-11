@@ -8,8 +8,10 @@ import uiFiles.StatisticsWindowUi as StatisticsWindowUi
 
 class StatisticsWindow(QtWidgets.QMainWindow,
                        StatisticsWindowUi.Ui_statisticsWindow):
-    def __init__(self, parent=None):
+    def __init__(self, statistics, parent=None):
         super().__init__(parent)
+
+        self.statistics = statistics
 
         self.setupUi(self)
         self.initUi()
@@ -18,13 +20,9 @@ class StatisticsWindow(QtWidgets.QMainWindow,
         self.statisticsTable.\
             customContextMenuRequested.connect(self.openContextMenu)
 
-        self.con = sqlite3.connect(DB_PATH)
-
-        cur = self.con.execute("SELECT * FROM Players")
-
-        self.columnNames = tuple(descr[0] for descr in cur.description)
+        columnNames = self.statistics.getColumnNames()
         self.columnNames = tuple(name.replace('_', ' ').capitalize()
-                                 for name in self.columnNames)
+                                 for name in columnNames)
 
         self.statisticsTable.setColumnCount(len(self.columnNames))
         self.statisticsTable.setHorizontalHeaderLabels(self.columnNames)
@@ -34,8 +32,7 @@ class StatisticsWindow(QtWidgets.QMainWindow,
     def updateStatisticsTable(self):
         self.statisticsTable.setRowCount(0)
 
-        cur = self.con.cursor()
-        players = cur.execute("SELECT * FROM Players").fetchall()
+        players = self.statistics.getStatistics()
 
         for row, player in enumerate(players):
             self.statisticsTable.setRowCount(row + 1)
@@ -82,53 +79,30 @@ class StatisticsWindow(QtWidgets.QMainWindow,
         nickname, state = QtWidgets.QInputDialog.getText(self,
                                                          "Add new player",
                                                          "Nickname:")
-
         if state is False:
             return
 
-        cur = self.con.cursor()
-        cur.execute("""INSERT INTO Players(nickname) VALUES (?)""",
-                    (nickname, ))
-
-        self.con.commit()
+        self.statistics.addPlayer(nickname)
         self.updateStatisticsTable()
 
     def editPlayer(self):
         playerId = self.sender().data()
-
-        cur = self.con.cursor()
-        cur_nickname = cur.execute("""SELECT nickname
-FROM Players WHERE id = ?""",
-                                   (playerId,)).fetchone()[0]
-
-        new_nickname, state = QtWidgets.QInputDialog.getText(self,
-                                                             "Edit player",
-                                                             "Nickname:",
-                                                             text=cur_nickname)
-
+        curNickname = self.statistics.getPlayersData(playerId,
+                                                     ("nickname",))[0]
+        newNickname, state = QtWidgets.QInputDialog.getText(self,
+                                                            "Edit player",
+                                                            "Nickname:",
+                                                            text=curNickname)
         if state is False:
             return
 
-        cur = self.con.cursor()
-        cur.execute("""UPDATE Players
-SET nickname = ?
-WHERE id = ?""",
-                    (new_nickname, playerId))
+        self.statistics.updatePlayersData(playerId,
+                                          (("nickname", newNickname), ))
 
-        self.con.commit()
         self.updateStatisticsTable()
 
     def removePlayer(self):
         playerId = self.sender().data()
+        self.statistics.deletePlayer(playerId)
 
-        cur = self.con.cursor()
-        cur.execute("""DELETE FROM Players WHERE id = ?""", (playerId, ))
-
-        self.con.commit()
         self.updateStatisticsTable()
-
-    def closeEvent(self, event):
-        self.con.commit()
-        self.con.close()
-
-        super().closeEvent(event)
