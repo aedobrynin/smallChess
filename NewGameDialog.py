@@ -1,5 +1,4 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
-import sqlite3
 
 from config import *
 
@@ -8,8 +7,10 @@ import uiFiles.NewGameDialogUi as NewGameDialogUi
 
 class NewGameDialog(QtWidgets.QDialog,
                     NewGameDialogUi.Ui_newGameDialog):
-    def __init__(self, parent=None):
+    def __init__(self, statistics, parent=None):
         super().__init__(parent)
+
+        self.statistics = statistics
 
         self.setupUi(self)
         self.initUi()
@@ -26,13 +27,7 @@ class NewGameDialog(QtWidgets.QDialog,
 
         self.startGameBtn.clicked.connect(self.accept)
 
-        self.con = sqlite3.connect(DB_PATH)
-
-        cur = self.con.cursor()
-
-        players = cur.execute("""SELECT id, nickname
-FROM Players""").fetchall()
-
+        players = self.statistics.getPlayersList()
         for playerId, nickname in players:
             variant = QtCore.QVariant(playerId)
             self.firstPlayerBox.addItem(nickname, variant)
@@ -75,8 +70,3 @@ FROM Players""").fetchall()
     def getTimerData(self):
         return (self.timeLimitCBox.checkState() == QtCore.Qt.Checked,
                 self.minutesSBox.value() * 60 + self.secondsSBox.value())
-
-    def closeEvent(self, event):
-        self.con.close()
-
-        super().closeEvent(event)

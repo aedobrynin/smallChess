@@ -54,5 +54,5 @@ class Ui_statisticsWindow(object):
     def retranslateUi(self, statisticsWindow):
         _translate = QtCore.QCoreApplication.translate
         statisticsWindow.setWindowTitle(_translate("statisticsWindow", "Statistics"))
-        self.statisticsTable.setSortingEnabled(True)
+        self.statisticsTable.setSortingEnabled(False)
         self.label.setText(_translate("statisticsWindow", "Right mouse button click on empty space to add new player or on player to also edit or delete it."))
