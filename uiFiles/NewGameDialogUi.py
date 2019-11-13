@@ -21,7 +21,7 @@ class Ui_newGameDialog(object):
         sizePolicy.setHeightForWidth(newGameDialog.sizePolicy().hasHeightForWidth())
         newGameDialog.setSizePolicy(sizePolicy)
         newGameDialog.setMinimumSize(QtCore.QSize(370, 160))
-        newGameDialog.setMaximumSize(QtCore.QSize(370, 160))
+        newGameDialog.setMaximumSize(QtCore.QSize(371, 161))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         newGameDialog.setWindowIcon(icon)

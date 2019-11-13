@@ -16,7 +16,7 @@ class MainWindow(QtWidgets.QMainWindow, MainWindowUi.Ui_mainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.statistics = Statistics(DB_PATH)
+        self.statistics = Statistics(resourcePath(DB_PATH))
 
         self.setupUi(self)
         self.initUi()

@@ -2,13 +2,13 @@ import sys
 import os
 import sqlite3
 
-from config import resource_path
+from config import resourcePath
 
 
 class Statistics():
     def __init__(self, pathToDatabase):
         self.dbPath = pathToDatabase
-        self.con = sqlite3.connect(resource_path(self.dbPath))
+        self.con = sqlite3.connect(resourcePath(self.dbPath))
 
     def __del__(self):
         self.con.close()

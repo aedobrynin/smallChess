@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/home/anton/Desktop/smallChess'],
+             pathex=['../smallChess'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -36,4 +36,5 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='./icon.ico')
+          console=False,
+          icon='./icon.ico')

@@ -21,7 +21,7 @@ class Ui_statisticsWindow(object):
         sizePolicy.setHeightForWidth(statisticsWindow.sizePolicy().hasHeightForWidth())
         statisticsWindow.setSizePolicy(sizePolicy)
         statisticsWindow.setMinimumSize(QtCore.QSize(800, 600))
-        statisticsWindow.setMaximumSize(QtCore.QSize(800, 600))
+        statisticsWindow.setMaximumSize(QtCore.QSize(801, 601))
         statisticsWindow.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)

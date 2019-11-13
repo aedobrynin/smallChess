@@ -35,10 +35,11 @@ class PromotionDialog(QtWidgets.QDialog,
         self.promotionButtons.buttonClicked.connect(self.promote)
 
     def getPathToIcon(self, pieceLetter):
-        return P_DIR +\
-               (pieceLetter.upper() if self.piecesColor == chess.WHITE
-                else pieceLetter.lower()) +\
-               P_EXT
+        return resourcePath(P_DIR +
+                            pieceLetter.lower() +
+                            ("w" if self.piecesColor == chess.WHITE
+                             else "b") +
+                            P_EXT)
 
     def promote(self, button):
         if button is self.promoteToKnight:

@@ -13,7 +13,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_promotionDialog(object):
     def setupUi(self, promotionDialog):
         promotionDialog.setObjectName("promotionDialog")
-        promotionDialog.resize(241, 90)
+        promotionDialog.resize(240, 90)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(promotionDialog.sizePolicy().hasHeightForWidth())
+        promotionDialog.setSizePolicy(sizePolicy)
+        promotionDialog.setMinimumSize(QtCore.QSize(240, 90))
+        promotionDialog.setMaximumSize(QtCore.QSize(241, 91))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         promotionDialog.setWindowIcon(icon)

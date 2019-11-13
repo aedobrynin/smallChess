@@ -1,4 +1,5 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
+import chess
 
 from config import *
 
@@ -31,6 +32,12 @@ class Cell(QtWidgets.QLabel):
         self.setFixedSize(self.width, self.height)
         self.pixmap = QtGui.QPixmap(self.width, self.height)
 
+    def getPathToPieceImg(self):
+        color = ("w" if self.piece.color == chess.WHITE else "b")
+        path = P_DIR + self.piece.symbol().lower() + color + P_EXT
+
+        return resourcePath(path)
+
     def mouseMoveEvent(self, e):
         if self.piece is None:
             return
@@ -38,7 +45,7 @@ class Cell(QtWidgets.QLabel):
         mimeData = QtCore.QMimeData()
         drag = QtGui.QDrag(self)
 
-        path = resource_path(P_DIR + self.piece.symbol() + P_EXT)
+        path = self.getPathToPieceImg()
 
         drag.setPixmap(QtGui.QPixmap(path))
         drag.setMimeData(mimeData)
@@ -67,9 +74,7 @@ class Cell(QtWidgets.QLabel):
 
         if self.piece is not None:
             painter = QtGui.QPainter(self.pixmap)
-
-            path = resource_path(P_DIR + self.piece.symbol() + P_EXT)
-
+            path = self.getPathToPieceImg()
             painter.drawPixmap(0, 0, QtGui.QPixmap(path))
             painter.end()
 
