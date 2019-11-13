@@ -1,5 +1,4 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
-import sqlite3
 
 from config import *
 

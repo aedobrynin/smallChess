@@ -37,7 +37,10 @@ class Cell(QtWidgets.QLabel):
 
         mimeData = QtCore.QMimeData()
         drag = QtGui.QDrag(self)
-        drag.setPixmap(QtGui.QPixmap(P_DIR + self.piece.symbol() + P_EXT))
+
+        path = resource_path(P_DIR + self.piece.symbol() + P_EXT)
+
+        drag.setPixmap(QtGui.QPixmap(path))
         drag.setMimeData(mimeData)
         drag.setHotSpot(e.pos() - self.rect().topLeft())
 
@@ -64,10 +67,10 @@ class Cell(QtWidgets.QLabel):
 
         if self.piece is not None:
             painter = QtGui.QPainter(self.pixmap)
-            painter.drawPixmap(0, 0,
-                               QtGui.QPixmap(P_DIR +
-                                             self.piece.symbol() +
-                                             P_EXT))
+
+            path = resource_path(P_DIR + self.piece.symbol() + P_EXT)
+
+            painter.drawPixmap(0, 0, QtGui.QPixmap(path))
             painter.end()
 
         self.setPixmap(self.pixmap)
