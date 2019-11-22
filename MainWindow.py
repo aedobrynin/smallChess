@@ -1,5 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import chess
+import datetime
+import os
 
 from Statistics import Statistics
 from StatisticsWindow import StatisticsWindow
@@ -115,25 +117,7 @@ This game is not ended.""",
         self.movesList.addItem(f"{movesQuantity}. {move.uci()}")
         self.movesList.scrollToBottom()
 
-    def gameEnded(self, result):
-        self.firstPlayerClock.stop()
-        self.secondPlayerClock.stop()
-
-        self.firstPlayerOfferDrawBtn.setEnabled(False)
-        self.firstPlayerOfferDrawBtn.setText("Offer a draw")
-
-        self.firstPlayerSurrenderBtn.setEnabled(False)
-
-        self.secondPlayerOfferDrawBtn.setEnabled(False)
-        self.secondPlayerOfferDrawBtn.setText("Offer a draw")
-
-        self.secondPlayerSurrenderBtn.setEnabled(False)
-
-        self.actionSeeStatistics.setEnabled(True)
-
-        self.movesList.addItem(result)
-        self.movesList.scrollToBottom()
-
+    def updateStatistics(self, result):
         firstPlayerStats = self.statistics.getPlayersData(self.firstPlayer[0],
                                                           ("games_played",
                                                            "games_won",
@@ -175,6 +159,34 @@ This game is not ended.""",
                                                "games_lost"),
                                               secondPlayerStats))
 
+    def gameEnded(self, result):
+        self.firstPlayerClock.stop()
+        self.secondPlayerClock.stop()
+
+        self.firstPlayerOfferDrawBtn.setEnabled(False)
+        self.firstPlayerOfferDrawBtn.setText("Offer a draw")
+
+        self.firstPlayerSurrenderBtn.setEnabled(False)
+
+        self.secondPlayerOfferDrawBtn.setEnabled(False)
+        self.secondPlayerOfferDrawBtn.setText("Offer a draw")
+
+        self.secondPlayerSurrenderBtn.setEnabled(False)
+
+        self.actionSeeStatistics.setEnabled(True)
+
+        self.movesList.addItem(result)
+        self.movesList.scrollToBottom()
+
+        self.updateStatistics(result)
+
+        saveResult, filename = self.savePGN()
+        if saveResult:
+            self.movesList.addItem("Game PGN was saved in")
+            self.movesList.addItem(filename)
+        else:
+            self.movesList.addItem("Game PGN wasn't saved")
+
     def offerDraw(self):
         if self.sender().text() == "Offer a draw":
             """Check if draw can be claimed without opponent approval"""
@@ -213,3 +225,34 @@ This game is not ended.""",
     def openStatisticsWindow(self):
         self.statisticsWindow = StatisticsWindow(self.statistics, self)
         self.statisticsWindow.show()
+
+    def genPGN(self):
+        game = self.board.getGame()
+        game.headers["Date"] = datetime.datetime.now().strftime("%y.%m.%d")
+        game.headers["White"] = self.firstPlayer[1]
+        game.headers["Black"] = self.secondPlayer[1]
+        return str(game)
+
+    def savePGN(self, auto=True):
+        if auto:
+            curTime = datetime.datetime.now().strftime("%y-%m-%d-%H:%M:%S")
+            if os.path.exists(RES_DIR) is False:
+                try:
+                    os.mkdir(RES_DIR)
+                except PermissionError:
+                    return 0, ""
+            filePath = f"{RES_DIR}{curTime}-\
+{self.firstPlayer[1]}-{self.secondPlayer[1]}.pgn"
+        else:
+            # TODO
+            pass
+
+        pgn = self.genPGN()
+
+        try:
+            file = open(filePath, 'w')
+            file.write(pgn)
+            file.close()
+            return 1, filePath
+        except PermissionError:
+            return 0, ""

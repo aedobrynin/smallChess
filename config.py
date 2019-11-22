@@ -14,6 +14,7 @@ P_DIR = "./Pieces/"  # Piece images directory
 P_EXT = ".png"  # Piece images extension
 
 DB_PATH = "./statistics.db"
+RES_DIR = "./results/"  # Game results directory
 
 
 def resourcePath(relativePath):

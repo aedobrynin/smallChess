@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import chess
+import chess.pgn
 
 from Cell import Cell
 from PromotionDialog import PromotionDialog
@@ -116,3 +117,6 @@ class BoardWidget(QtWidgets.QWidget):
 
     def getMovesQuantity(self):
         return len(self.board.move_stack)
+
+    def getGame(self):
+        return chess.pgn.Game.from_board(self.board)

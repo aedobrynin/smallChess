@@ -1,6 +1,9 @@
 TODO
 pyenv/
 buildenv/
+results/
+*.pgn
+*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
