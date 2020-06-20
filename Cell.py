@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import chess
 
-from config import *
+from config import P_DIR, P_EXT, resourcePath, BLACK_CELL_COLOR
 
 
 class Cell(QtWidgets.QLabel):
@@ -51,10 +51,19 @@ class Cell(QtWidgets.QLabel):
         drag.setMimeData(mimeData)
         drag.setHotSpot(e.pos() - self.rect().topLeft())
 
+        piece = self.piece
+        self.removePiece()
+        self.updatePixmap()
+
         cursor = QtGui.QPixmap(1, 1)
         cursor.fill(QtCore.Qt.transparent)
         drag.setDragCursor(cursor, QtCore.Qt.MoveAction)
-        drag.exec(QtCore.Qt.MoveAction)
+
+        # If event isn't accepted, return the piece back.
+        # It can happen, if we drop piece away from the board
+        if not drag.exec(QtCore.Qt.MoveAction):
+            self.setPiece(piece)
+            self.updatePixmap()
 
     def dragEnterEvent(self, event):
         event.accept()

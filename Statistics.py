@@ -1,5 +1,3 @@
-import sys
-import os
 import sqlite3
 
 from config import resourcePath
@@ -73,16 +71,3 @@ WHERE id = ?"""
         cur = self.con.cursor()
         cur.execute(request, (playerId, ))
         self.con.commit()
-
-
-if __name__ == "__main__":
-    from config import *
-    st = Statistics(DB_PATH)
-    print(st.getStatistics())
-    print(st.getPlayersList())
-    st.addPlayer("max2281337")
-    print(st.getStatistics())
-    print(st.getPlayersData(86, ("nickname",)))
-    st.updatePlayersData(86, (("nickname", "newNickname"),
-                              ("games_won", "15")))
-    print(st.getPlayersData(86))

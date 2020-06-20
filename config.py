@@ -1,7 +1,6 @@
 import sys
 import os
 from PyQt5.QtGui import QColor
-from chess import WHITE, BLACK
 
 FIELD_SIZE = 360
 

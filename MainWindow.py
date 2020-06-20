@@ -1,7 +1,7 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
-import chess
 import datetime
 import os
+from PyQt5 import QtWidgets
+import chess
 
 from Statistics import Statistics
 from StatisticsWindow import StatisticsWindow
@@ -9,8 +9,7 @@ from BoardWidget import BoardWidget
 from NewGameDialog import NewGameDialog
 from ChessClock import ChessClock
 
-from config import *
-
+from config import RES_DIR, DB_PATH, resourcePath
 import uiFiles.MainWindowUi as MainWindowUi
 
 

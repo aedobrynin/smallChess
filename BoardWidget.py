@@ -1,10 +1,10 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore
 import chess
 import chess.pgn
 
 from Cell import Cell
 from PromotionDialog import PromotionDialog
-from config import *
+from config import CELL_SIZE, FIELD_SIZE, WHITE_CELL_COLOR, BLACK_CELL_COLOR
 
 
 class BoardWidget(QtWidgets.QWidget):
@@ -82,14 +82,13 @@ class BoardWidget(QtWidgets.QWidget):
 
             self.board.push(move)
 
-            self.updateBoard()
-
             self.moveMade.emit(move)
 
             result = self.board.result()
             if result != '*':
                 self.gameStarted = False
                 self.gameEnded.emit(result)
+        self.updateBoard()
 
     def getCurrentTurn(self):
         return self.board.turn

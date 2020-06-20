@@ -1,6 +1,4 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
-
-from config import *
+from PyQt5 import QtWidgets, QtCore
 
 import uiFiles.StatisticsWindowUi as StatisticsWindowUi
 

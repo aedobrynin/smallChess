@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import chess
 
-from config import *
+from config import CELL_SIZE, P_DIR, P_EXT, resourcePath
 
 import uiFiles.PromotionDialogUi as PromotionDialogUi
 
